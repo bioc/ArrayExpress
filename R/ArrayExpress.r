@@ -8,6 +8,7 @@ ArrayExpress = function(input, path = ".", save = TRUE, rawcol = NULL)
     raweset = magetab2bioc(rawfiles = extract$rawfiles,
       sdrf = extract$sdrf,
       idf = extract$idf,
+      adf = extract$adf,
       path = path,
       rawcol = rawcol,
       save = save)

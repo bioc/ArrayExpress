@@ -69,7 +69,7 @@ assign.pheno.ncs = function(ph,files,raweset)
 
 
 ## Create AffyBatch for Affymetrix data sets
-AB = function(i, files, path, ph, adr)
+AB = function(i, files, path, ph, adr, adf, idf)
   {
     if(adr == "Empty" || is.na(adr))
       {
@@ -103,11 +103,18 @@ AB = function(i, files, path, ph, adr)
               }              
           }
       }
+    rawesetex = try(creating_experiment(idf = idf, eset = raweset, path = path))
+    if(!inherits(rawesetex, 'try-error'))
+      raweset = rawesetex else warning("Cannot attach experimentData")
+  
+    rawesetex = try(addADF(adf = adf, eset = raweset, path = path))
+    if(!inherits(rawesetex, 'try-error'))
+      raweset = rawesetex else warning("Cannot attach featureData")
     return(raweset)
   }#end of AffyBatch
 
 ## Create NCS or ES for non Affymetrix data sets
-nonAB = function(i, files, path, ph, rawcol, adr)
+nonAB = function(i, files, path, ph, rawcol, adr, adf, idf)
   {
     pht = pData(ph)
     if(!"Array.Data.Matrix.File" %in% colnames(pht))
@@ -236,6 +243,15 @@ nonAB = function(i, files, path, ph, rawcol, adr)
         if(df[1] > 2)
           stop(sprintf("There are too many columns that could be read in the files.\n Try to set the argument 'rawcol' by choosing among the following columns names: \n"),sprintf("\"%s\" \n",scanname))
      }
+    
+    rawesetex = try(creating_experiment(idf = idf, eset = raweset, path = path))
+    if(!inherits(rawesetex, 'try-error'))
+      raweset = rawesetex else warning("Cannot attach experimentData")
+  
+    rawesetex = try(addADF(adf = adf, eset = raweset, path = path))
+    if(!inherits(rawesetex, 'try-error'))
+      raweset = rawesetex else warning("Cannot attach featureData")
+
     return(raweset)
   }#end of non Affymetrix objects
 
@@ -283,3 +299,8 @@ creating_experiment = function(idf, eset, path)
     return(eset)	  
   }
 
+addADF = function(adf, eset, path)
+  {
+    featureData(eset) = try(read.AnnotatedDataFrame(adf, path = path, row.names=NULL, blank.lines.skip = TRUE, fill=TRUE, varMetadata.char="$"))
+    return(eset)
+  }
