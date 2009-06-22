@@ -40,7 +40,7 @@ You need to be connected to Internet to have access to the database.
 
 <<queryAE>>=
 library("ArrayExpress")
-sets = queryAE(keywords = "leukemia", species = "homo+sapiens")
+sets = queryAE(keywords = "pneumonia", species = "homo+sapiens")
 @
 %
 
