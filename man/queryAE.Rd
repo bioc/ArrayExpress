@@ -29,10 +29,10 @@ queryAE(keywords = NULL, species = NULL)
   Maintainer: <audrey@ebi.ac.uk>  
 }
 \examples{
-## To retrieve all the identifiers of melanoma data sets
+## To retrieve all the identifiers of pneumonia data sets
 pneumo = queryAE(keywords = "pneumonia")
 
-## To retrieve all the identifiers of melanoma data sets studied in human
+## To retrieve all the identifiers of pneumonia data sets studied in human
 pneumoHS = queryAE(keywords = "pneumonia", species = "homo+sapiens")
 
 }
