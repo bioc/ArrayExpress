@@ -80,12 +80,24 @@ get_filenames <-function(jsonData, ftpUrl, type){
   
   if (tolower(type)=='raw' || tolower(type) == 'full'){
     enaAccession <- NULL
-    jsonLinks = unlist(jsonData$section$links)
-    if(!is_empty(jsonLinks)){
-      if (toupper(jsonLinks['attributes.value']) == 'ENA'){
-        enaAccession = jsonLinks['url']
-      }     
+    # Extract the data frame from the list
+    links <- jsonData$section$links
+
+    for (df in links){
+      if (!is_empty(enaAccession)){
+        break
+      }
+      for (i in 1:nrow(df)) {
+        url <- df$url[i]
+        attributes <- df$attributes[[i]]
+
+        if (any(attributes$value == "ENA")) {
+          enaAccession <- url
+          break
+        }
+      }
     }
+
     if (!is_empty(enaAccession)){
       enaUrl=paste("https://www.ebi.ac.uk/ena/portal/api/filereport?accession=",enaAccession,"&download=false&fields=fastq_ftp&format=json&limit=0&result=read_run", sep="")
       enaData= get_request(enaUrl)
